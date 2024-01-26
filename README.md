@@ -1,22 +1,22 @@
 ﻿# ComfyUI Floodgate
 This is an Extension for [ComfyUI](https://github.com/comfyanonymous/ComfyUI), which allows you to control the logic flow with just one click!
 
-<p align="center"><img src="workflow.png"></p>
+<p align="center"><img src="example.png"></p>
 
-<h3 align="center">Motivation</h3>
-<p align="center">While <b>Hires. Fix</b> <i>(or similar workflows)</i> can significantly improve the output,
+### Motivation
+While **Hires. Fix** *(or similar workflows)* can significantly improve the output,
 it also takes a longer time to process. Thus, many will simply run the base resolution until a good seed is found before enabling it. 
-However, for <code>ComfyUI</code> this means connecting and disconnecting multiple nodes every single time...</p>
+However, for `ComfyUI` this means connecting and disconnecting multiple nodes every single time...
 
-<h3 align="center">Solution</h3>
-<p align="center">Introducing, <b>Floodgate</b>! <br>
-Simply click one button to toggle between the logic flows. No more connecting and disconnecting multiple nodes! </p>
+### Solution
+Introducing, **Floodgate**! <br>
+Simply click one button to toggle between the logic flows. No more connecting and disconnecting multiple nodes!
 
-<h3 align="center">How to Use</h3>
-<p align="center">Connect the <code>LATENT</code> output from a Sampler to the input of the Floodgate, 
-then connect each path to the desired remaining workflow. Under <code>Queue Prompt</code>, you can toggle between the path to take.
-The path not chosen will simply not be executed. Also, since <code>ComfyUI</code> caches the intermediate data, 
-opening the Floodgate will not require the precedent nodes to be processed again!</p>
+### How to Use
+Connect the `LATENT` output from a Sampler node to the input of the Floodgate, 
+then connect each path to the desired remaining workflow. Under `Queue Prompt`, you can toggle between the path to take.
+The path not chosen will simply not be executed. Also, since `ComfyUI` caches the intermediate data, 
+opening the Floodgate will not require the precedent nodes to be processed again!
 
 ### Note / ToDo
 - Only **one** Floodgate can exist in a Workflow *as of now*
