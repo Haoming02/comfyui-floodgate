@@ -25,7 +25,7 @@ class FloodGate:
     RETURN_NAMES = ("CLOSE", "OPEN")
 
     FUNCTION = "gate"
-    CATEGORY = "latent"
+    CATEGORY = "utils"
 
     def gate(self, source, gate_open):
         return (source, source)
