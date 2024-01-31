@@ -84,7 +84,7 @@ def recursive_block_gate(prompt:dict, node_IDs:list) -> dict:
         return recursive_block_gate(prompt, to_delete)
     else:
         return prompt
-    
+
 
 original_validate = execution.validate_prompt
 
@@ -100,14 +100,35 @@ def hijack_validate(prompt):
 
         try:
             gate_open = prompt[ID]['inputs']['gate_open']
-            prompt = block_gate(prompt, ID, gate_open)
+            if type(gate_open) is bool:
+                prompt = block_gate(prompt, ID, gate_open)
+            elif type(gate_open) is list:
+                sauce_id, conn_id = gate_open
+
+                gate_open = list(prompt[sauce_id]['inputs'].values())[conn_id]
+                if type(gate_open) is bool:
+                    prompt = block_gate(prompt, ID, gate_open)
+                else:
+                    raise ValueError
+            else:
+                raise ValueError
 
         except IOError:
-            return (False, 
+            return (False,
             {
-                'type': 'floodgate_io_mismatch', 
-                'message': 'Floodgate IO Type Mismatch', 
-                'details': 'source cannot be connected to outputs', 
+                'type': 'floodgate_io_mismatch',
+                'message': 'Floodgate IO Type Mismatch',
+                'details': 'source cannot be connected to outputs',
+                'extra_info': {}
+            }
+            , [], [])
+
+        except ValueError:
+            return (False,
+            {
+                'type': 'floodgate_invalid_boolean',
+                'message': 'Floodgate Unable to Determine Boolean',
+                'details': 'please use a primitive boolean node',
                 'extra_info': {}
             }
             , [], [])
