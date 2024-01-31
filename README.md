@@ -1,12 +1,6 @@
 ﻿# ComfyUI Floodgate
 This is an Extension for [ComfyUI](https://github.com/comfyanonymous/ComfyUI), which allows you to easily control the logic flow!
 
-## New Features
-1. You can now connect any arbitrary types 
-    - *(input/output types still have to match)*
-2. You can now have multiple Floodgates in one workflow
-3. Control each Floodgate individually on itself
-
 <p align="center"><img src="workflow.png"></p>
 
 <h3 align="center">Motivation</h3>
@@ -26,3 +20,17 @@ Connect the output of a node *(**eg.** `LATENT`)* to the `source` of the Floodga
 then connect each path to the desired remaining workflow. Simply click on `gate_open` to toggle between the paths to take.
 The path not chosen will not be executed. Furthermore, since `ComfyUI` caches the intermediate results, 
 opening the Floodgate will not require the precedent nodes to be processed again!
+
+<h3 align="center">Features</h3>
+
+1. Connect any arbitrary types 
+    - *(input/output types still have to match)*
+2. Multiple Floodgates in one workflow
+3. Control each Floodgate individually
+
+<hr>
+
+**Note:** The logic flow is parsed during the queuing stage, **not** the execution stage.
+As a result, the boolean value has to be already determined when you press `Queue Prompt`, 
+such as from the toggle or a primitive node. 
+If you use a node that outputs a boolean during execution, this will not work.
