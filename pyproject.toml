@@ -1,14 +1,13 @@
 [project]
 name = "comfyui-floodgate"
-description = "This is an Extension for ComfyUI, which allows you to control the logic flow with just one click!"
+description = "A node that allows you to switch between execution flow"
 version = "1.0.0"
-license = "LICENSE"
+license = "MIT"
 
 [project.urls]
 Repository = "https://github.com/Haoming02/comfyui-floodgate"
-#  Used by Comfy Registry https://comfyregistry.org
 
 [tool.comfy]
-PublisherId = ""
-DisplayName = "comfyui-floodgate"
+PublisherId = "haoming02"
+DisplayName = "Floodgate"
 Icon = ""
