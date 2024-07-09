@@ -1,15 +1,13 @@
 from .floodgate import FloodGate
-from aiohttp import web
 import execution
-import server
 import nodes
 
 NODE_CLASS_MAPPINGS = {"FloodGate": FloodGate}
 NODE_DISPLAY_NAME_MAPPINGS = {"FloodGate": "Flood Gate"}
 
 
-def find_gate(prompt:dict) -> list:
-    '''Find the Unique ID of the Floodgate Node'''
+def find_gate(prompt: dict) -> list:
+    """Find the Unique ID of the Floodgate Node"""
     gate_IDs = []
 
     for k, v in prompt.items():
@@ -21,17 +19,18 @@ def find_gate(prompt:dict) -> list:
 
     return gate_IDs
 
-def block_gate(prompt:dict, gate_ID:str, floodgate_open:bool) -> dict:
-    '''"Bypass" the Nodes that should be Blocked'''
+
+def block_gate(prompt: dict, gate_ID: str, floodgate_open: bool) -> dict:
+    """ "Bypass" the Nodes that should be Blocked"""
     nodes_affected = []
 
     try:
-        sauce_id, out_index = prompt[gate_ID]['inputs']['source']
+        sauce_id, out_index = prompt[gate_ID]["inputs"]["source"]
     except KeyError:
         # Floodgate is not connected; let ComfyUI raise the error
         return prompt
 
-    sauce_class = nodes.NODE_CLASS_MAPPINGS[prompt[sauce_id]['class_type']]
+    sauce_class = nodes.NODE_CLASS_MAPPINGS[prompt[sauce_id]["class_type"]]
     sauce_type = str(sauce_class.RETURN_TYPES[out_index]).lower().strip()
 
     for node, data in prompt.items():
@@ -41,8 +40,10 @@ def block_gate(prompt:dict, gate_ID:str, floodgate_open:bool) -> dict:
 
             if gate_ID in v:
 
-                target_class = nodes.NODE_CLASS_MAPPINGS[data['class_type']]
-                target_type = (target_class.INPUT_TYPES()['required'][k][0]).lower().strip()
+                target_class = nodes.NODE_CLASS_MAPPINGS[data["class_type"]]
+                target_type = (
+                    (target_class.INPUT_TYPES()["required"][k][0]).lower().strip()
+                )
 
                 if sauce_type != target_type:
                     raise IOError()
@@ -63,8 +64,9 @@ def block_gate(prompt:dict, gate_ID:str, floodgate_open:bool) -> dict:
     else:
         return prompt
 
-def recursive_block_gate(prompt:dict, node_IDs:list) -> dict:
-    '''Block the subsequent nodes of which source has been blocked'''
+
+def recursive_block_gate(prompt: dict, node_IDs: list) -> dict:
+    """Block the subsequent nodes of which source has been blocked"""
     to_delete = []
 
     for node, data in prompt.items():
@@ -88,8 +90,9 @@ def recursive_block_gate(prompt:dict, node_IDs:list) -> dict:
 
 original_validate = execution.validate_prompt
 
+
 def hijack_validate(prompt):
-    gate_IDs:list = find_gate(prompt)
+    gate_IDs: list = find_gate(prompt)
 
     if len(gate_IDs) == 0:
         return original_validate(prompt)
@@ -99,13 +102,13 @@ def hijack_validate(prompt):
             continue
 
         try:
-            gate_open = prompt[ID]['inputs']['gate_open']
+            gate_open = prompt[ID]["inputs"]["gate_open"]
             if type(gate_open) is bool:
                 prompt = block_gate(prompt, ID, gate_open)
             elif type(gate_open) is list:
                 sauce_id, conn_id = gate_open
 
-                gate_open = list(prompt[sauce_id]['inputs'].values())[conn_id]
+                gate_open = list(prompt[sauce_id]["inputs"].values())[conn_id]
                 if type(gate_open) is bool:
                     prompt = block_gate(prompt, ID, gate_open)
                 else:
@@ -114,25 +117,32 @@ def hijack_validate(prompt):
                 raise ValueError
 
         except IOError:
-            return (False,
-            {
-                'type': 'floodgate_io_mismatch',
-                'message': 'Floodgate IO Type Mismatch',
-                'details': 'source cannot be connected to outputs',
-                'extra_info': {}
-            }
-            , [], [])
+            return (
+                False,
+                {
+                    "type": "floodgate_io_mismatch",
+                    "message": "Floodgate IO Type Mismatch",
+                    "details": "source cannot be connected to outputs",
+                    "extra_info": {},
+                },
+                [],
+                [],
+            )
 
         except ValueError:
-            return (False,
-            {
-                'type': 'floodgate_invalid_boolean',
-                'message': 'Floodgate Unable to Determine Boolean',
-                'details': 'please use a primitive boolean node',
-                'extra_info': {}
-            }
-            , [], [])
+            return (
+                False,
+                {
+                    "type": "floodgate_invalid_boolean",
+                    "message": "Floodgate Unable to Determine Boolean",
+                    "details": "please use a primitive boolean node",
+                    "extra_info": {},
+                },
+                [],
+                [],
+            )
 
     return original_validate(prompt)
+
 
 execution.validate_prompt = hijack_validate
