@@ -2,7 +2,7 @@
 name = "comfyui-floodgate"
 description = "A node that allows you to switch between execution flow"
 version = "1.0.0"
-license = "MIT"
+license = { text = "MIT License" }
 
 [project.urls]
 Repository = "https://github.com/Haoming02/comfyui-floodgate"
