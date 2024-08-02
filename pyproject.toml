@@ -1,8 +1,9 @@
 [project]
 name = "comfyui-floodgate"
-description = "A node that allows you to switch between execution flow"
-version = "1.0.0"
+description = "A node that allows you to switch between execution paths"
+version = "1.0.1"
 license = { text = "MIT License" }
+dependencies = []
 
 [project.urls]
 Repository = "https://github.com/Haoming02/comfyui-floodgate"
