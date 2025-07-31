@@ -1,31 +1,17 @@
-class AnyType(str):
-    """
-    A special class that is always equal in comparisons.
-    Credit:
-        https://github.com/pythongosssss/ComfyUI-Custom-Scripts/blob/main/py/repeater.py#L2
-    """
-
-    def __eq__(self, _: object) -> bool:
-        return True
-
-    def __ne__(self, _: object) -> bool:
-        return False
+from comfy.comfy_types.node_typing import IO, ComfyNodeABC, InputTypeDict
 
 
-generic = AnyType("*")
-
-
-class FloodGate:
+class FloodGate(ComfyNodeABC):
     @classmethod
-    def INPUT_TYPES(s):
+    def INPUT_TYPES(s) -> InputTypeDict:
         return {
             "required": {
-                "source": (generic,),
-                "gate_open": ("BOOLEAN", {"default": False}),
+                "source": (IO.ANY,),
+                "gate_open": (IO.BOOLEAN, {"default": False}),
             }
         }
 
-    RETURN_TYPES = (generic, generic)
+    RETURN_TYPES = (IO.ANY, IO.ANY)
     RETURN_NAMES = ("CLOSE", "OPEN")
 
     FUNCTION = "gate"

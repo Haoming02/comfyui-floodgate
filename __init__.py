@@ -1,6 +1,7 @@
-from .floodgate import FloodGate
 import execution
 import nodes
+
+from .floodgate import FloodGate
 
 NODE_CLASS_MAPPINGS = {"FloodGate": FloodGate}
 NODE_DISPLAY_NAME_MAPPINGS = {"FloodGate": "Flood Gate"}
@@ -103,12 +104,9 @@ async def hijack_validate(prompt_id: int, prompt: dict):
 
         try:
             gate_open = prompt[ID]["inputs"]["gate_open"]
-            try:
-                if isinstance(gate_open,(tuple,list)):
-                    gate_open = gate_open[0]
-                gate_open = bool(gate_open)
-            except:
-                pass
+
+            if isinstance(gate_open, (tuple, list)) and len(gate_open) == 0:
+                gate_open = bool(gate_open[0])
             if type(gate_open) is bool:
                 prompt = block_gate(prompt, ID, gate_open)
             elif type(gate_open) is list:

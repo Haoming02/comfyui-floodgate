@@ -1,7 +1,7 @@
 [project]
 name = "comfyui-floodgate"
 description = "A node that allows you to switch between execution paths"
-version = "1.0.1"
+version = "1.1.0"
 license = { text = "MIT License" }
 dependencies = []
 
