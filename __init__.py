@@ -103,6 +103,12 @@ def hijack_validate(prompt):
 
         try:
             gate_open = prompt[ID]["inputs"]["gate_open"]
+            try:
+                if isinstance(gate_open,(tuple,list)):
+                    gate_open = gate_open[0]
+                gate_open = bool(gate_open)
+            except:
+                pass
             if type(gate_open) is bool:
                 prompt = block_gate(prompt, ID, gate_open)
             elif type(gate_open) is list:
