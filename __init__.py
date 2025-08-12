@@ -92,11 +92,16 @@ def recursive_block_gate(prompt: dict, node_IDs: list) -> dict:
 original_validate = execution.validate_prompt
 
 
-async def hijack_validate(prompt_id: int, prompt: dict):
+async def hijack_validate(*args):
+    for arg in args:
+        if isinstance(arg, dict):
+            prompt = arg
+            break
+
     gate_IDs: list = find_gate(prompt)
 
     if len(gate_IDs) == 0:
-        return await original_validate(prompt_id, prompt)
+        return await original_validate(*args)
 
     for ID in gate_IDs:
         if ID not in prompt.keys():
@@ -146,7 +151,7 @@ async def hijack_validate(prompt_id: int, prompt: dict):
                 [],
             )
 
-    return await original_validate(prompt_id, prompt)
+    return await original_validate(*args)
 
 
 execution.validate_prompt = hijack_validate
